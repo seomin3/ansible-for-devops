@@ -1,0 +1,5 @@
+---
+firewall_allowed_tcp_port:
+  - '22'
+  - '80'
+virnish_use_default_vcl: false
