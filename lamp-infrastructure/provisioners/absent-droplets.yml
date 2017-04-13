@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    droplets:
+      - { name: a4d.lamp.varnish, group: "lamp-varnish" }
+      - { name: a4d.lamp.www.1, group: "lamp-www" }
+      - { name: a4d.lamp.www.2, group: "lamp-www" }
+      - { name: a4d.lamp.db.1, group: "lamp-db" }
+      - { name: a4d.lamp.db.2, group: "lamp-db" }
+      - { name: a4d.lamp.memcached, group: "lamp-memcached" }
+
+  tasks:
+  - name: delete digitalocean droplets
+    digital_ocean:
+      state: absent
+      command: droplet
+      name: "{{ item.name }}"
+      size_id: "{{ item.size | default('512mb') }}"
+      image_id: "{{ item.image | default('centos-6-x64') }}"
+      region_id: "{{ item.region | default('nyc2') }}"
+      ssh_key_ids: "{{ item.ssh_key | default('7632942') }}"
+      unique_name: yes
+    with_items: "{{ droplets }}"
